@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data.SqlClient;
@@ -36,6 +33,50 @@ namespace DesafioAspNet
                 GvData.DataBind();
 
             }
+
+            IMC();
+        }
+
+        private int GetId()
+        {
+            var query = "select max(id) from atletas";
+            int id = 0;
+            
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            id = reader.GetInt32(0);
+                        }
+                    }
+                }
+            }
+
+            if(id == 0)
+            {
+                return 1;
+            }
+
+            return id + 1;
+        }
+
+        private void IMC()
+        {
+            foreach(GridViewRow gr in GvData.Rows)
+            {
+                string peso = gr.Cells[5].Text;
+                string altura = gr.Cells[4].Text;
+                string imc = GetImc(peso, altura);
+
+                gr.Cells[8].Text = imc;
+                gr.Cells[9].Text = GetClassificacao(imc);
+            }
         }
 
         private void ExecuteNonQuery(string command, SqlParameter[] parameters)
@@ -50,25 +91,23 @@ namespace DesafioAspNet
                     cmd.Parameters.AddRange(parameters);
                     cmd.ExecuteNonQuery();
                 }
-
             }
         }
 
-        protected void btn_Click(object sender, EventArgs e)
+        protected void Inserir(object sender, EventArgs e)
         {
-            string command = "INSERT INTO atletas (id, nome, apelido, nascimento, altura,peso,posicao,camisa) VALUES(0, @Nome, @Apelido, @Nascimento, @Altura, @Peso, @Posicao, @Camisa)";
-            var nasc = new SqlParameter("Nascimento", DateTime.ParseExact(Nascimento.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture));
-            var altura = new SqlParameter("Altura", float.Parse(Altura.Text, CultureInfo.InvariantCulture.NumberFormat));
-            var camisa = new SqlParameter("Camisa", Int32.Parse(Camisa.Text));
-
+            string command = "INSERT INTO atletas (id, nome, apelido, nascimento, altura,peso,posicao,camisa) VALUES(@Id, @Nome, @Apelido, @Nascimento, @Altura, @Peso, @Posicao, @Camisa)";
+            var coiso = Nascimento.Text;
             SqlParameter[] parameters = {
                 new SqlParameter("Nome", Nome.Text),
                 new SqlParameter("Apelido", Apelido.Text),
-                new SqlParameter("Nascimento", DateTime.ParseExact(Nascimento.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture)),
+                new SqlParameter("Nascimento", DateTime.ParseExact(Nascimento.Text, "yyyy-MM-dd", CultureInfo.InvariantCulture)),
+                //new SqlParameter("Nascimento", Nascimento.SelectedDate),
                 new SqlParameter("Altura", float.Parse(Altura.Text, CultureInfo.InvariantCulture.NumberFormat)),
                 new SqlParameter("Peso", float.Parse(Peso.Text, CultureInfo.InvariantCulture.NumberFormat)),
                 new SqlParameter("Posicao", Posicao.Text),
                 new SqlParameter("Camisa", Int32.Parse(Camisa.Text)),
+                new SqlParameter("Id", GetId())
             };
 
 
@@ -85,7 +124,7 @@ namespace DesafioAspNet
 
         private void DeleteData(int id)
         {
-            string commandText = "DELETE FROM atleta WHERE Id = @Id";
+            string commandText = "DELETE FROM atletas WHERE Id = @Id";
             SqlParameter[] parameters = { new SqlParameter("@Id", id) };
             ExecuteNonQuery(commandText, parameters);
         }
@@ -126,25 +165,73 @@ namespace DesafioAspNet
             TextBox posicao = (TextBox)row.Cells[6].Controls[0];
             TextBox camisa = (TextBox)row.Cells[7].Controls[0];
 
-            UpdateData(userId, nome.Text, apelido.Text, nascimento.Text, altura.Text, peso.Text, posicao.Text, camisa.Text);
+            UpdateData(userId, nome.Text, apelido.Text, nascimento.Text.Split(' ')[0], altura.Text, peso.Text, posicao.Text, camisa.Text);
             CancelEditing();
         }
 
         private void UpdateData(int id, string nome, string apelido, string nascimento, string altura, string peso, string posicao, string camisa)
         {
-            string commandText = "UPDATE data SET Name = @Name, Email = @Email, Phone = @Phone, Age = @Age WHERE Id = @Id";
+            var teste = new SqlParameter("Nascimento", DateTime.ParseExact(nascimento, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+
+            string commandText = "UPDATE atletas SET Nome = @Nome, Apelido = @Apelido, Nascimento = @Nascimento, Altura = @Altura, Peso = @Peso, Posicao = @Posicao, Camisa = @Camisa WHERE Id = @Id";
             SqlParameter[] parameters = {
                 new SqlParameter("Nome", nome),
                 new SqlParameter("Apelido", apelido),
-                new SqlParameter("Nascimento", nascimento),
-                new SqlParameter("Altura", altura),
-                new SqlParameter("Peso", peso),
+                new SqlParameter("Nascimento", DateTime.ParseExact(nascimento, "dd/MM/yyyy", CultureInfo.InvariantCulture)),
+                new SqlParameter("Altura", float.Parse(altura, CultureInfo.InvariantCulture.NumberFormat)),
+                new SqlParameter("Peso", float.Parse(peso, CultureInfo.InvariantCulture.NumberFormat)),
                 new SqlParameter("Posicao", posicao),
-                new SqlParameter("Camisa", camisa),
+                new SqlParameter("Camisa", Int32.Parse(camisa)),
                 new SqlParameter("Id", id)
             };
 
             ExecuteNonQuery(commandText, parameters);
+        }
+
+        public string GetImc(string peso, string altura)
+        {
+            float imc = float.Parse(peso) / (float.Parse(altura) * 2);
+
+            return imc.ToString();
+        }
+
+        public string GetClassificacao(string imc)
+        {
+            var x = float.Parse(imc);
+
+            string result = "";
+
+            if(x < 18.5)
+            {
+                result = "Abaixo do peso normal";
+            }
+
+            if(x > 18.5 && x < 24.9)
+            {
+                result = "Peso normal";
+            }
+
+            if(x > 25 && x < 29.9)
+            {
+                result = "Excesso de peso";
+            }
+
+            if (x > 30 && x < 34.9)
+            {
+                result = "Obesidade classe I";
+            }
+
+            if (x > 35 && x < 39.9)
+            {
+                result = "Obesidade classe II";
+            }
+
+            if (x >=  40)
+            {
+                result = "Obsidade classe III";
+            }
+
+            return result;
         }
     }
 

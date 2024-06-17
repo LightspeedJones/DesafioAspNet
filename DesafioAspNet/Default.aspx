@@ -29,38 +29,35 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .form-table {
+        .table-atletas {
             width: 100%;
         }
 
-        .form-table td {
+        .table-atletas td {
             padding: 6px;
         }
 
-        /*.form-table input[type="text"],
-        .form-table input[type="email"],
-        .form-table input[type="number"] {
-            width: 100%;
-            padding: 4px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            }*/
-
-        .form-table label {
+        .table-atletas label {
             font-weight: bold;
         }
 
-        .form-table .btn-submit {
+        .table-atletas .btn-submit {
             background-color: #007BFF;
             color: #fff;
             border: none;
             padding: 6px 10px;
             border-radius: 4px;
             cursor: pointer;
+            height: 40px;
+            font-size: medium;
         }
 
-        .form-table .btn-submit:hover {
+        .table-atletas .btn-submit:hover {
             background-color: #0056b3;
+        }
+
+        .table-atletas td{
+            display: grid
         }
 
         .grid-view {
@@ -85,15 +82,9 @@
         }
 
         .grid-view th {
-            background-color: #007BFF;
+            background-color: #111518;
             color: #fff;
         }
-
-        /*input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }*/
 
         .edit-icon,
         .delete-icon,
@@ -131,52 +122,67 @@
     <form id="form1" runat="server">
         <div class="container">
             <h2>Atletas</h2>
-            <table class="form-table">
+            <table class="table-atletas">
                 <tr>
                     <td>
-                        <label for="Nome">Nome:</label></td>
-                    <td>
-                        <asp:TextBox ID="Nome" runat="server" required></asp:TextBox></td>
+                        <label for="Nome">Nome:</label>
+                        <asp:TextBox ID="Nome" runat="server" required></asp:TextBox>
+                    </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="Apelido">Apelido:</label></td>
-                    <td>
-                        <asp:TextBox ID="Apelido" runat="server" required></asp:TextBox></td>
+                        <label for="Apelido">Apelido:</label>
+                        <asp:TextBox ID="Apelido" runat="server" required></asp:TextBox>
+                    </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="Nascimento">Data de nascimento:</label></td>
-                    <td>
-                        <asp:TextBox ID="Nascimento" runat="server" required></asp:TextBox></td>
+                        <label for="Nascimento">Data de nascimento:</label>
+                       <%-- <asp:Calendar ID="Nascimento" runat="server">
+                            <OtherMonthDayStyle ForeColor="LightGray">
+                           </OtherMonthDayStyle>
+
+                           <TitleStyle BackColor="Blue"
+                                       ForeColor="White">
+                           </TitleStyle>
+
+                           <DayStyle BackColor="gray">
+                           </DayStyle>
+
+                           <SelectedDayStyle BackColor="LightGray"
+                                             Font-Bold="True">
+                           </SelectedDayStyle>
+                        </asp:Calendar>--%>
+                        <asp:TextBox ID="Nascimento" runat="server" TextMode="Date" required></asp:TextBox>
+                    </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="Altura">Altura:</label></td>
-                    <td>
-                        <asp:TextBox ID="Altura" runat="server" required></asp:TextBox></td>
+                        <label for="Altura">Altura:</label>
+                        <asp:TextBox ID="Altura" runat="server" required></asp:TextBox>
+                    </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="Peso">Peso:</label></td>
-                    <td>
-                        <asp:TextBox ID="Peso" runat="server" required></asp:TextBox></td>
+                        <label for="Peso">Peso:</label>
+                        <asp:TextBox ID="Peso" runat="server" required></asp:TextBox>
+                    </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="Posicao">Posição:</label></td>
-                    <td>
-                        <asp:TextBox ID="Posicao" runat="server" required></asp:TextBox></td>
+                        <label for="Posicao">Posição:</label>
+                        <asp:TextBox ID="Posicao" runat="server" required></asp:TextBox>
+                    </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="Camisa">Camisa:</label></td>
-                    <td>
-                        <asp:TextBox ID="Camisa" runat="server" required></asp:TextBox></td>
+                        <label for="Camisa">Camisa:</label>
+                        <asp:TextBox ID="Camisa" runat="server" required></asp:TextBox>
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <asp:Button ID="btn" runat="server" Text="Submit" OnClick="btn_Click" CssClass="btn-submit" />
+                        <asp:Button ID="btn" runat="server" Text="Inserir" OnClick="Inserir" CssClass="btn-submit" />
                     </td>
                 </tr>
             </table>
@@ -201,6 +207,16 @@
                     <asp:BoundField DataField="peso" HeaderText="Peso" ItemStyle-BorderWidth="1px" ItemStyle-BorderStyle="Solid" HeaderStyle-BorderWidth="1px" HeaderStyle-BorderStyle="Solid" />
                     <asp:BoundField DataField="posicao" HeaderText="Posição" ItemStyle-BorderWidth="1px" ItemStyle-BorderStyle="Solid" HeaderStyle-BorderWidth="1px" HeaderStyle-BorderStyle="Solid" />
                     <asp:BoundField DataField="camisa" HeaderText="Camisa" ItemStyle-BorderWidth="1px" ItemStyle-BorderStyle="Solid" HeaderStyle-BorderWidth="1px" HeaderStyle-BorderStyle="Solid" />
+                    <asp:TemplateField HeaderText="IMC">
+                        <ItemTemplate>
+                            <asp:Label ID="IMC" runat="server"></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Classificação IMC">
+                        <ItemTemplate>
+                            <asp:Label ID="classif" runat="server"></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
                     <asp:TemplateField HeaderText="" ItemStyle-CssClass="action-column">
                         <ItemTemplate>
                             <asp:LinkButton ID="btnEdit" runat="server" CommandName="Edit" CssClass="fa fa-pen-to-square edit-icon no-outline"></asp:LinkButton>
