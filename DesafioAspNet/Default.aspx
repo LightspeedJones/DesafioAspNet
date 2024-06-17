@@ -20,6 +20,10 @@
             padding: 20px;
         }
 
+        #constr{
+            font-size: small;
+        }
+
         .container {
             max-width: 360px;
             margin: auto;
@@ -35,7 +39,18 @@
 
         .table-atletas td {
             padding: 6px;
+            display: grid;
+            height: 57px;
         }
+
+        .table-atletas td input{
+            height: 15px;
+        }
+
+        .table-atletas td label{
+            height: 19px;
+        }
+
 
         .table-atletas label {
             font-weight: bold;
@@ -54,10 +69,6 @@
 
         .table-atletas .btn-submit:hover {
             background-color: #0056b3;
-        }
-
-        .table-atletas td{
-            display: grid
         }
 
         .grid-view {
@@ -138,34 +149,25 @@
                 <tr>
                     <td>
                         <label for="Nascimento">Data de nascimento:</label>
-                       <%-- <asp:Calendar ID="Nascimento" runat="server">
-                            <OtherMonthDayStyle ForeColor="LightGray">
-                           </OtherMonthDayStyle>
-
-                           <TitleStyle BackColor="Blue"
-                                       ForeColor="White">
-                           </TitleStyle>
-
-                           <DayStyle BackColor="gray">
-                           </DayStyle>
-
-                           <SelectedDayStyle BackColor="LightGray"
-                                             Font-Bold="True">
-                           </SelectedDayStyle>
-                        </asp:Calendar>--%>
-                        <asp:TextBox ID="Nascimento" runat="server" TextMode="Date" required></asp:TextBox>
+                        <asp:TextBox ID="Nascimento" runat="server" required TextMode="Date"></asp:TextBox>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="Altura">Altura:</label>
                         <asp:TextBox ID="Altura" runat="server" required></asp:TextBox>
+                        <asp:RegularExpressionValidator ID="constr" runat="server" ValidationExpression="^\d*(\.\d+)?$"
+                            ErrorMessage="formato inválido"
+                            ControlToValidate="Altura" ForeColor="Red"></asp:RegularExpressionValidator>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="Peso">Peso:</label>
                         <asp:TextBox ID="Peso" runat="server" required></asp:TextBox>
+                        <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ValidationExpression="^\d*(\.\d+)?$"
+                            ErrorMessage="formato inválido"
+                            ControlToValidate="Peso" ForeColor="Red"></asp:RegularExpressionValidator>
                     </td>
                 </tr>
                 <tr>
@@ -177,7 +179,7 @@
                 <tr>
                     <td>
                         <label for="Camisa">Camisa:</label>
-                        <asp:TextBox ID="Camisa" runat="server" required></asp:TextBox>
+                        <asp:TextBox ID="Camisa" runat="server" TextMode="Number" required></asp:TextBox>
                     </td>
                 </tr>
                 <tr>
@@ -189,7 +191,7 @@
         </div>
 
         <div class="grid-view">
-            <asp:GridView ID="GvData" runat="server" AutoGenerateColumns="False" GridLines="Both" DataKeyNames="id" OnPageIndexChanging="GvData_PageIndexChanging" OnRowCancelingEdit="GvData_RowCancelingEdit" OnRowDeleting="GvData_RowDeleting" OnRowEditing="GvData_RowEditing" OnRowUpdating="Gvdata_RowUpdating">
+            <asp:GridView ID="GridAtletas" runat="server" AutoGenerateColumns="False" GridLines="Both" DataKeyNames="id" OnPageIndexChanging="GridAtletas_PageIndexChanging" OnRowCancelingEdit="GridAtletas_RowCancelingEdit" OnRowDeleting="GridAtletas_RowDeleting" OnRowEditing="GridAtletas_RowEditing" OnRowUpdating="GridAtletas_RowUpdating">
 
                 <Columns>
                     <asp:TemplateField HeaderText="Id" Visible="false">

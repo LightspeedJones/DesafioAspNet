@@ -29,11 +29,12 @@ namespace DesafioAspNet
                 SqlDataAdapter adapter = new SqlDataAdapter("select * from atletas", conn);
                 adapter.Fill(dataTable);
 
-                GvData.DataSource = dataTable;
-                GvData.DataBind();
+                GridAtletas.DataSource = dataTable;
+                GridAtletas.DataBind();
 
             }
 
+            LimparCampos();
             IMC();
         }
 
@@ -68,7 +69,7 @@ namespace DesafioAspNet
 
         private void IMC()
         {
-            foreach(GridViewRow gr in GvData.Rows)
+            foreach(GridViewRow gr in GridAtletas.Rows)
             {
                 string peso = gr.Cells[5].Text;
                 string altura = gr.Cells[4].Text;
@@ -94,6 +95,18 @@ namespace DesafioAspNet
             }
         }
 
+        private void LimparCampos()
+        {
+            Nome.Text = string.Empty;
+            Apelido.Text = string.Empty;
+            Nascimento.Text = string.Empty;
+            Altura.Text = string.Empty;
+            Peso.Text = string.Empty;
+            Posicao.Text = string.Empty;
+            Camisa.Text = string.Empty;
+
+        }
+
         protected void Inserir(object sender, EventArgs e)
         {
             string command = "INSERT INTO atletas (id, nome, apelido, nascimento, altura,peso,posicao,camisa) VALUES(@Id, @Nome, @Apelido, @Nascimento, @Altura, @Peso, @Posicao, @Camisa)";
@@ -102,7 +115,6 @@ namespace DesafioAspNet
                 new SqlParameter("Nome", Nome.Text),
                 new SqlParameter("Apelido", Apelido.Text),
                 new SqlParameter("Nascimento", DateTime.ParseExact(Nascimento.Text, "yyyy-MM-dd", CultureInfo.InvariantCulture)),
-                //new SqlParameter("Nascimento", Nascimento.SelectedDate),
                 new SqlParameter("Altura", float.Parse(Altura.Text, CultureInfo.InvariantCulture.NumberFormat)),
                 new SqlParameter("Peso", float.Parse(Peso.Text, CultureInfo.InvariantCulture.NumberFormat)),
                 new SqlParameter("Posicao", Posicao.Text),
@@ -115,9 +127,9 @@ namespace DesafioAspNet
             BindGridView();
         }
 
-        protected void GvData_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        protected void GridAtletas_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
-            int userId = Convert.ToInt32(GvData.DataKeys[e.RowIndex].Value);
+            int userId = Convert.ToInt32(GridAtletas.DataKeys[e.RowIndex].Value);
             DeleteData(userId);
             BindGridView();
         }
@@ -129,34 +141,34 @@ namespace DesafioAspNet
             ExecuteNonQuery(commandText, parameters);
         }
 
-        protected void GvData_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        protected void GridAtletas_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-            GvData.PageIndex = e.NewPageIndex;
+            GridAtletas.PageIndex = e.NewPageIndex;
             BindGridView();
         }
 
-        protected void GvData_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        protected void GridAtletas_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
             CancelEditing();
         }
 
         private void CancelEditing()
         {
-            GvData.EditIndex = -1;
+            GridAtletas.EditIndex = -1;
             BindGridView();
         }
 
-        protected void GvData_RowEditing(object sender, GridViewEditEventArgs e)
+        protected void GridAtletas_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            GvData.EditIndex = e.NewEditIndex;
+            GridAtletas.EditIndex = e.NewEditIndex;
             BindGridView();
         }
 
-        protected void Gvdata_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        protected void GridAtletas_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
-            int userId = Convert.ToInt32(GvData.DataKeys[e.RowIndex].Value);
+            int userId = Convert.ToInt32(GridAtletas.DataKeys[e.RowIndex].Value);
 
-            GridViewRow row = GvData.Rows[e.RowIndex];
+            GridViewRow row = GridAtletas.Rows[e.RowIndex];
             TextBox nome = (TextBox)row.Cells[1].Controls[0];
             TextBox apelido = (TextBox)row.Cells[2].Controls[0];
             TextBox nascimento = (TextBox)row.Cells[3].Controls[0];
@@ -235,5 +247,6 @@ namespace DesafioAspNet
         }
     }
 
+    
     
 }

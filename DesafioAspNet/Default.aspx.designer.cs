@@ -60,6 +60,15 @@ namespace DesafioAspNet
         protected global::System.Web.UI.WebControls.TextBox Altura;
 
         /// <summary>
+        /// Controle constr.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator constr;
+
+        /// <summary>
         /// Controle Peso.
         /// </summary>
         /// <remarks>
@@ -67,6 +76,15 @@ namespace DesafioAspNet
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox Peso;
+
+        /// <summary>
+        /// Controle RegularExpressionValidator1.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator RegularExpressionValidator1;
 
         /// <summary>
         /// Controle Posicao.
@@ -96,12 +114,12 @@ namespace DesafioAspNet
         protected global::System.Web.UI.WebControls.Button btn;
 
         /// <summary>
-        /// Controle GvData.
+        /// Controle GridAtletas.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GvData;
+        protected global::System.Web.UI.WebControls.GridView GridAtletas;
     }
 }
