@@ -4,12 +4,13 @@ using System.Web.UI.WebControls;
 using System.Data.SqlClient;
 using System.Data;
 using System.Globalization;
+using System.Configuration;
 
 namespace DesafioAspNet
 {
     public partial class _Default : Page
     {
-        private readonly string connectionString = @"Data Source=LAPTOP-KJA9K60V;Initial Catalog=AtletasDB;Integrated Security=True";
+        private readonly string connectionString = ConfigurationManager.AppSettings["connectionString"].ToString();
 
         protected void Page_Load(object sender, EventArgs e)
         {
